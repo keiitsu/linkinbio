@@ -15,11 +15,26 @@
     "link_title_size": "14"
   },
   "socials": [
-    { "platform": "instagram", "url": "https://instagram.com/54jingyi" },
-    { "platform": "tiktok", "url": "https://tiktok.com/@54jingyi" },
-    { "platform": "youtube", "url": "https://youtube.com/@g9206312002" },
-    { "platform": "facebook", "url": "https://www.facebook.com/profile.php?id=100091505631426" },
-    { "platform": "email", "url": "54jingyi@gmail.com" }
+    {
+      "platform": "instagram",
+      "url": "https://instagram.com/54jingyi"
+    },
+    {
+      "platform": "tiktok",
+      "url": "https://tiktok.com/@54jingyi"
+    },
+    {
+      "platform": "youtube",
+      "url": "https://youtube.com/@g9206312002"
+    },
+    {
+      "platform": "facebook",
+      "url": "https://www.facebook.com/profile.php?id=100091505631426"
+    },
+    {
+      "platform": "email",
+      "url": "54jingyi@gmail.com"
+    }
   ],
   "links_label": "我的資源",
   "links": [
@@ -62,13 +77,13 @@
   ],
   "product_label": "精選商品",
   "product": {
+    "visible": true,
     "emoji": "✨",
     "tag": "數位商品",
     "title": "Social Content AI Accelerator Pack",
     "desc": "AI 加速包 · 從零到一打造你的 IG 內容矩陣，附完整提示詞與實戰範本",
     "cta": "立即取得",
-    "url": "https://shop.beacons.ai/54jingyi/a0cba165-558c-46a7-9500-94a3c2000f3a",
-    "visible": true
+    "url": "https://shop.beacons.ai/54jingyi/a0cba165-558c-46a7-9500-94a3c2000f3a"
   },
   "subscribe": {
     "visible": true,
