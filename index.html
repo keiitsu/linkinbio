@@ -431,7 +431,28 @@ function applyTheme(t) {
   if (t.caramel) { r.setProperty('--caramel', t.caramel); }
   if (t.rose)    { r.setProperty('--rose', t.rose); }
   if (t.text)    { r.setProperty('--text', t.text); }
-  if (t.font)    { document.body.style.fontFamily = `"${t.font}", -apple-system, "PingFang TC", sans-serif`; }
+  if (t.font) {
+    const GFONTS = {
+      'Noto Sans TC': 'Noto+Sans+TC:wght@300;400;500;600',
+      'Noto Serif TC': 'Noto+Serif+TC:wght@400;600;700',
+      'Zen Kaku Gothic New': 'Zen+Kaku+Gothic+New:wght@400;700',
+      'Zen Old Mincho': 'Zen+Old+Mincho:wght@400;700',
+      'LXGW WenKai TC': 'LXGW+WenKai+TC',
+      'Ma Shan Zheng': 'Ma+Shan+Zheng',
+      'Zhi Mang Xing': 'Zhi+Mang+Xing',
+      'Long Cang': 'Long+Cang',
+      'Zcool KuaiLe': 'ZCOOL+KuaiLe',
+      'Zcool QingKe HuangYou': 'ZCOOL+QingKe+HuangYou',
+      'Zcool XiaoWei': 'ZCOOL+XiaoWei'
+    };
+    if (GFONTS[t.font] && !document.getElementById('dynamic_font')) {
+      const l = document.createElement('link');
+      l.id = 'dynamic_font'; l.rel = 'stylesheet';
+      l.href = `https://fonts.googleapis.com/css2?family=${GFONTS[t.font]}&display=swap`;
+      document.head.appendChild(l);
+    }
+    document.body.style.fontFamily = `"${t.font}", -apple-system, "PingFang TC", sans-serif`;
+  }
 }
 
 function render(cfg) {

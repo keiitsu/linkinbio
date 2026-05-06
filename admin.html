@@ -342,12 +342,35 @@
       </div>
       <div class="field">
         <label>整體字體</label>
-        <select id="theme_font" style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13.5px;color:var(--text);background:var(--bg);outline:none;font-family:inherit">
-          <option value="Noto Sans TC">Noto Sans TC（預設，無襯線）</option>
-          <option value="Noto Serif TC">Noto Serif TC（書法感襯線）</option>
-          <option value="sans-serif">系統無襯線字體</option>
-          <option value="serif">系統襯線字體</option>
+        <select id="theme_font" style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13.5px;color:var(--text);background:var(--bg);outline:none;font-family:inherit" onchange="previewFont(this.value)">
+          <optgroup label="── 無襯線 ──">
+            <option value="Noto Sans TC">Noto Sans TC（簡潔現代）</option>
+            <option value="Zen Kaku Gothic New">Zen Kaku Gothic（方正俐落）</option>
+          </optgroup>
+          <optgroup label="── 襯線 ──">
+            <option value="Noto Serif TC">Noto Serif TC（書法感襯線）</option>
+            <option value="Zen Old Mincho">Zen Old Mincho（古典明體）</option>
+          </optgroup>
+          <optgroup label="── 手寫 / 毛筆 ──">
+            <option value="LXGW WenKai TC">LXGW WenKai TC（霞鶩文楷，文藝感）</option>
+            <option value="Ma Shan Zheng">Ma Shan Zheng（馬善政，毛筆楷書）</option>
+            <option value="Zhi Mang Xing">Zhi Mang Xing（智芒行書，瀟灑）</option>
+            <option value="Long Cang">Long Cang（龍藏，草書風）</option>
+          </optgroup>
+          <optgroup label="── 活潑 / 設計感 ──">
+            <option value="Zcool KuaiLe">站酷快樂體（輕鬆活潑）</option>
+            <option value="Zcool QingKe HuangYou">站酷慶科黃油體（可愛圓潤）</option>
+            <option value="Zcool XiaoWei">站酷小薇LOGO體（設計感）</option>
+          </optgroup>
+          <optgroup label="── 系統字體 ──">
+            <option value="sans-serif">系統無襯線</option>
+            <option value="serif">系統襯線</option>
+          </optgroup>
         </select>
+        <div id="font_preview" style="margin-top:10px;padding:10px 14px;background:var(--bg);border:1px solid var(--border);border-radius:8px;font-size:15px;color:var(--text);line-height:1.8;display:none">
+          璟爺的 AI 教學 · 女性成長 · 數位副業<br>
+          <span style="font-size:12px;color:var(--muted)">讓每個女生都能靠內容變現，活出高級感</span>
+        </div>
       </div>
       <div class="field">
         <label>名稱字體大小 <span id="username_size_val" style="color:var(--caramel)"></span></label>
@@ -739,6 +762,37 @@ function collectConfig() {
     },
     footer: getVal('footer_text')
   };
+}
+
+// ── Font Preview ──
+const GFONTS_MAP = {
+  'Noto Sans TC': 'Noto+Sans+TC:wght@400;600',
+  'Noto Serif TC': 'Noto+Serif+TC:wght@400;700',
+  'Zen Kaku Gothic New': 'Zen+Kaku+Gothic+New:wght@400;700',
+  'Zen Old Mincho': 'Zen+Old+Mincho:wght@400;700',
+  'LXGW WenKai TC': 'LXGW+WenKai+TC',
+  'Ma Shan Zheng': 'Ma+Shan+Zheng',
+  'Zhi Mang Xing': 'Zhi+Mang+Xing',
+  'Long Cang': 'Long+Cang',
+  'Zcool KuaiLe': 'ZCOOL+KuaiLe',
+  'Zcool QingKe HuangYou': 'ZCOOL+QingKe+HuangYou',
+  'Zcool XiaoWei': 'ZCOOL+XiaoWei'
+};
+function loadGFont(font) {
+  if (!GFONTS_MAP[font]) return;
+  const id = 'gf_' + font.replace(/\s/g,'_');
+  if (document.getElementById(id)) return;
+  const link = document.createElement('link');
+  link.id = id;
+  link.rel = 'stylesheet';
+  link.href = `https://fonts.googleapis.com/css2?family=${GFONTS_MAP[font]}&display=swap`;
+  document.head.appendChild(link);
+}
+function previewFont(font) {
+  loadGFont(font);
+  const preview = document.getElementById('font_preview');
+  preview.style.display = 'block';
+  preview.style.fontFamily = `"${font}", "Noto Sans TC", sans-serif`;
 }
 
 // ── Avatar Upload ──
