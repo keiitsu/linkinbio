@@ -528,7 +528,9 @@ function render(cfg) {
     ${productHtml}
     ${subscribeHtml}
 
-    <footer class="footer"><p>${cfg.footer}</p></footer>
+    <footer class="footer">
+      <p id="footerText" onclick="adminTap()" style="cursor:default">${cfg.footer}</p>
+    </footer>
   `;
 }
 
@@ -536,6 +538,18 @@ function handleSubscribe(e) {
   e.preventDefault();
   document.getElementById('subscribeForm').style.display = 'none';
   document.getElementById('subscribeSuccess').style.display = 'block';
+}
+
+// 隱藏入口：連點頁尾 5 下進入後台
+let tapCount = 0, tapTimer;
+function adminTap() {
+  tapCount++;
+  clearTimeout(tapTimer);
+  tapTimer = setTimeout(() => tapCount = 0, 2000);
+  if (tapCount >= 5) {
+    tapCount = 0;
+    window.location.href = './admin.html';
+  }
 }
 
 fetch('./config.json?v=' + Date.now())

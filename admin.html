@@ -240,6 +240,30 @@
 </head>
 <body>
 
+<!-- 密碼鎖定畫面 -->
+<div id="lockScreen" style="
+  position:fixed;inset:0;z-index:999;
+  background:#FAF5F0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;
+  font-family:'Noto Sans TC',sans-serif;
+">
+  <div style="font-size:40px">🔐</div>
+  <div style="font-size:18px;font-weight:700;color:#3D2B1F">後台管理登入</div>
+  <div style="font-size:13px;color:#8A6B5A;margin-bottom:4px">請輸入管理密碼</div>
+  <input type="password" id="lockInput" placeholder="密碼"
+    style="padding:12px 18px;border:1.5px solid #E8DDD5;border-radius:99px;font-size:15px;
+           outline:none;text-align:center;width:240px;font-family:inherit"
+    onkeydown="if(event.key==='Enter')checkPassword()"
+  />
+  <button onclick="checkPassword()"
+    style="padding:11px 32px;background:#B8825A;color:#fff;border:none;border-radius:99px;
+           font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">
+    進入後台
+  </button>
+  <div id="lockError" style="font-size:12px;color:#C0513A;display:none">密碼錯誤，請再試一次</div>
+</div>
+
+<div id="adminContent" style="display:none">
 <div class="topbar">
   <div class="topbar-title">⚙️ 後台管理</div>
   <div class="topbar-right">
@@ -522,6 +546,7 @@
 </div>
 
 <div class="status-bar" id="statusBar"></div>
+</div><!-- end adminContent -->
 
 <script>
 const REPO = 'keiitsu/linkinbio';
@@ -929,9 +954,33 @@ function showStatus(msg, type) {
   }
 }
 
+// ── 密碼保護 ──
+const ADMIN_PASSWORD = 'jingyi54';  // 可自行修改
+
+function checkPassword() {
+  const input = document.getElementById('lockInput').value;
+  if (input === ADMIN_PASSWORD) {
+    sessionStorage.setItem('admin_auth', '1');
+    document.getElementById('lockScreen').style.display = 'none';
+    document.getElementById('adminContent').style.display = 'block';
+    loadToken();
+    loadConfig();
+  } else {
+    document.getElementById('lockError').style.display = 'block';
+    document.getElementById('lockInput').value = '';
+    document.getElementById('lockInput').focus();
+  }
+}
+
 // ── Init ──
-loadToken();
-loadConfig();
+if (sessionStorage.getItem('admin_auth') === '1') {
+  document.getElementById('lockScreen').style.display = 'none';
+  document.getElementById('adminContent').style.display = 'block';
+  loadToken();
+  loadConfig();
+} else {
+  setTimeout(() => document.getElementById('lockInput').focus(), 100);
+}
 </script>
 </body>
 </html>
