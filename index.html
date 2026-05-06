@@ -431,6 +431,7 @@ function applyTheme(t) {
   if (t.caramel) { r.setProperty('--caramel', t.caramel); }
   if (t.rose)    { r.setProperty('--rose', t.rose); }
   if (t.text)    { r.setProperty('--text', t.text); }
+  if (t.font)    { document.body.style.fontFamily = `"${t.font}", -apple-system, "PingFang TC", sans-serif`; }
 }
 
 function render(cfg) {

@@ -199,6 +199,17 @@
     .badge-opt.selected { border-color: var(--caramel); background: rgba(184,130,90,0.1); color: var(--caramel-d); }
     .badge-opt[data-val="HOT"].selected { border-color: #C0513A; background: rgba(192,81,58,0.08); color: #C0513A; }
     .badge-opt[data-val="FREE"].selected { border-color: #4A8A65; background: rgba(74,138,101,0.1); color: #4A8A65; }
+    .avatar-upload-wrap { display: flex; flex-direction: column; }
+    .upload-label {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 16px; border-radius: 99px;
+      border: 1.5px solid var(--caramel); color: var(--caramel);
+      font-size: 12.5px; font-weight: 600; cursor: pointer;
+      background: rgba(184,130,90,0.06); width: fit-content;
+      transition: background 0.2s;
+    }
+    .upload-label:hover { background: rgba(184,130,90,0.12); }
+
     .add-btn {
       width: 100%; padding: 11px; border: 2px dashed var(--border);
       border-radius: 10px; background: none; color: var(--muted);
@@ -261,8 +272,19 @@
     </div>
     <div class="card-body open">
       <div class="field">
-        <label>頭像圖片 URL</label>
-        <input type="text" id="profile_avatar" placeholder="./avatar_jy.jpg 或外部圖片網址" />
+        <label>頭像圖片</label>
+        <div class="avatar-upload-wrap">
+          <img id="avatar_preview" src="./avatar_jy.jpg" alt="頭像預覽"
+            onerror="this.src='./avatar.jpg'"
+            style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid var(--border);margin-bottom:10px;display:block" />
+          <label class="upload-label" for="avatar_file_input">
+            📁 選擇圖片上傳
+            <input type="file" id="avatar_file_input" accept="image/*" style="display:none" onchange="handleAvatarFile(this)" />
+          </label>
+          <div style="font-size:11px;color:var(--muted);margin-top:6px">或直接輸入圖片網址：</div>
+          <input type="text" id="profile_avatar" placeholder="./avatar_jy.jpg 或外部圖片網址"
+            style="margin-top:6px" oninput="document.getElementById('avatar_preview').src=this.value" />
+        </div>
       </div>
       <div class="field">
         <label>顯示名稱</label>
@@ -317,6 +339,15 @@
             <input type="text" id="theme_text" oninput="syncColorFromText('theme_text','theme_text_picker')" placeholder="#3D2B1F" />
           </div>
         </div>
+      </div>
+      <div class="field">
+        <label>整體字體</label>
+        <select id="theme_font" style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13.5px;color:var(--text);background:var(--bg);outline:none;font-family:inherit">
+          <option value="Noto Sans TC">Noto Sans TC（預設，無襯線）</option>
+          <option value="Noto Serif TC">Noto Serif TC（書法感襯線）</option>
+          <option value="sans-serif">系統無襯線字體</option>
+          <option value="serif">系統襯線字體</option>
+        </select>
       </div>
       <div class="field">
         <label>名稱字體大小 <span id="username_size_val" style="color:var(--caramel)"></span></label>
@@ -625,6 +656,8 @@ function populate(cfg) {
   setColor('theme_caramel_picker','theme_caramel', t.caramel||'#B8825A');
   setColor('theme_rose_picker','theme_rose', t.rose||'#D4A5A5');
   setColor('theme_text_picker','theme_text', t.text||'#3D2B1F');
+  const fontEl = document.getElementById('theme_font');
+  if (t.font) fontEl.value = t.font;
   setRange('theme_username_size','username_size_disp', t.username_size||26);
   setRange('theme_tagline_size','tagline_size_disp', t.tagline_size||13);
   setRange('theme_link_title_size','link_title_size_disp', t.link_title_size||14);
@@ -674,6 +707,7 @@ function collectConfig() {
       caramel: getVal('theme_caramel'),
       rose: getVal('theme_rose'),
       text: getVal('theme_text'),
+      font: document.getElementById('theme_font').value,
       username_size: document.getElementById('theme_username_size').value,
       tagline_size: document.getElementById('theme_tagline_size').value,
       link_title_size: document.getElementById('theme_link_title_size').value
@@ -707,6 +741,61 @@ function collectConfig() {
   };
 }
 
+// ── Avatar Upload ──
+let pendingAvatarFile = null;
+
+function handleAvatarFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+  pendingAvatarFile = file;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('avatar_preview').src = e.target.result;
+    document.getElementById('profile_avatar').value = './avatar_jy.jpg';
+  };
+  reader.readAsDataURL(file);
+}
+
+async function uploadAvatarToGitHub(token) {
+  if (!pendingAvatarFile) return;
+
+  const toBase64 = file => new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => res(r.result.split(',')[1]);
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
+
+  const content = await toBase64(pendingAvatarFile);
+  const filename = 'avatar_jy.jpg';
+
+  // Get current SHA if exists
+  let sha;
+  try {
+    const metaRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${filename}`, {
+      headers: { Authorization: 'Bearer ' + token }
+    });
+    if (metaRes.ok) {
+      const meta = await metaRes.json();
+      sha = meta.sha;
+    }
+  } catch(e) {}
+
+  const body = { message: 'update avatar', content };
+  if (sha) body.sha = sha;
+
+  const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${filename}`, {
+    method: 'PUT',
+    headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error('頭像上傳失敗：' + (err.message || '未知錯誤'));
+  }
+  pendingAvatarFile = null;
+}
+
 // ── Save to GitHub ──
 async function saveConfig() {
   const token = localStorage.getItem('gh_token');
@@ -721,6 +810,12 @@ async function saveConfig() {
   showStatus('正在儲存並部署...', 'loading');
 
   try {
+    // 0. Upload avatar if pending
+    if (pendingAvatarFile) {
+      showStatus('正在上傳頭像...', 'loading');
+      await uploadAvatarToGitHub(token);
+    }
+
     // 1. Get current SHA
     const metaRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE}`, {
       headers: { Authorization: 'Bearer ' + token }
