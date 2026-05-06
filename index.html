@@ -529,7 +529,14 @@ function render(cfg) {
     ${subscribeHtml}
 
     <footer class="footer">
-      <p id="footerText" onclick="adminTap()" style="cursor:default">${cfg.footer}</p>
+      <p>${cfg.footer}</p>
+      <a href="./admin.html" style="
+        display:inline-block;margin-top:10px;
+        color:rgba(61,43,31,0.18);font-size:14px;
+        text-decoration:none;transition:color 0.3s;
+        " onmouseover="this.style.color='rgba(184,130,90,0.5)'"
+           onmouseout="this.style.color='rgba(61,43,31,0.18)'"
+           title="管理">⚙︎</a>
     </footer>
   `;
 }
