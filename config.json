@@ -1,0 +1,80 @@
+{
+  "profile": {
+    "avatar": "./avatar_jy.jpg",
+    "username": "54jingyi",
+    "tagline": "AI 教學 · 女性成長 · 數位副業",
+    "bio": "讓每個女生都能靠內容變現，活出高級感"
+  },
+  "theme": {
+    "bg": "#FAF5F0",
+    "caramel": "#B8825A",
+    "rose": "#D4A5A5",
+    "text": "#3D2B1F",
+    "username_size": "26",
+    "tagline_size": "13",
+    "link_title_size": "14"
+  },
+  "socials": [
+    { "platform": "instagram", "url": "https://instagram.com/54jingyi" },
+    { "platform": "tiktok", "url": "https://tiktok.com/@54jingyi" },
+    { "platform": "youtube", "url": "https://youtube.com/@g9206312002" },
+    { "platform": "facebook", "url": "https://www.facebook.com/profile.php?id=100091505631426" },
+    { "platform": "email", "url": "54jingyi@gmail.com" }
+  ],
+  "links_label": "我的資源",
+  "links": [
+    {
+      "emoji": "🛍️",
+      "title": "璟爺高級福利社",
+      "subtitle": "嚴選好物 · 璟爺選品 · 限量出貨",
+      "url": "https://myship.7-11.com.tw/general/detail/GM2605028601902",
+      "badge": "HOT",
+      "featured": true,
+      "visible": true
+    },
+    {
+      "emoji": "👑",
+      "title": "大女主顯化致富俱樂部",
+      "subtitle": "手機致富 · 0成本獲客 · 100%授權利潤",
+      "url": "https://www.skool.com/1000-9284/about?ref=0b3efe9894f94379bbe9967b7c64051b",
+      "badge": "JOIN",
+      "featured": true,
+      "visible": true
+    },
+    {
+      "emoji": "📅",
+      "title": "AI 週計畫模板",
+      "subtitle": "7天規劃 AI 副業計畫，複製即用",
+      "url": "https://www.notion.so/AI-351c95129e98805e90aecb1ab953f140?source=copy_link",
+      "badge": "FREE",
+      "featured": false,
+      "visible": true
+    },
+    {
+      "emoji": "✍️",
+      "title": "IG 輪播貼文提示詞模板",
+      "subtitle": "複製貼上就能出貼文，省下 3 小時",
+      "url": "https://www.notion.so/IG-350c95129e9880cfa7c2e5ef71490ace?source=copy_link",
+      "badge": "FREE",
+      "featured": false,
+      "visible": true
+    }
+  ],
+  "product_label": "精選商品",
+  "product": {
+    "emoji": "✨",
+    "tag": "數位商品",
+    "title": "Social Content AI Accelerator Pack",
+    "desc": "AI 加速包 · 從零到一打造你的 IG 內容矩陣，附完整提示詞與實戰範本",
+    "cta": "立即取得",
+    "url": "https://shop.beacons.ai/54jingyi/a0cba165-558c-46a7-9500-94a3c2000f3a",
+    "visible": true
+  },
+  "subscribe": {
+    "visible": true,
+    "label": "加入訂閱",
+    "title": "訂閱璟爺獨家更新",
+    "subtitle": "獲得 AI 工具教學、限定資源與變現技巧，直送你的信箱。"
+  },
+  "footer": "© 2025 54jingyi · All rights reserved"
+}

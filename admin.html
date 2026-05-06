@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>後台管理｜54jingyi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #FAF5F0;
+      --surface: #fff;
+      --border: #E8DDD5;
+      --caramel: #B8825A;
+      --caramel-d: #9A6B44;
+      --text: #3D2B1F;
+      --muted: #8A6B5A;
+      --danger: #C0513A;
+      --success: #4A8A65;
+      --radius: 12px;
+    }
+    body {
+      font-family: "Noto Sans TC", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding-bottom: 80px;
+    }
+    /* ── Top Bar ── */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .topbar-title { font-size: 16px; font-weight: 700; color: var(--caramel); }
+    .topbar-right { display: flex; gap: 10px; align-items: center; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 9px 18px; border-radius: 99px; border: none;
+      font-size: 13px; font-weight: 700; cursor: pointer;
+      font-family: inherit; transition: opacity 0.2s, transform 0.2s;
+    }
+    .btn:hover { opacity: 0.85; transform: translateY(-1px); }
+    .btn-primary { background: var(--caramel); color: #fff; }
+    .btn-ghost { background: transparent; border: 1.5px solid var(--border); color: var(--muted); }
+    .btn-danger { background: var(--danger); color: #fff; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    /* ── Layout ── */
+    .container { max-width: 640px; margin: 0 auto; padding: 24px 20px; }
+
+    /* ── Token Setup ── */
+    .token-box {
+      background: var(--surface);
+      border: 1.5px solid #E8C99A;
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+    .token-box h3 { font-size: 13px; font-weight: 700; color: var(--caramel); margin-bottom: 8px; }
+    .token-box p { font-size: 12px; color: var(--muted); line-height: 1.7; margin-bottom: 12px; }
+    .token-row { display: flex; gap: 8px; }
+    .token-row input {
+      flex: 1; padding: 9px 12px; border: 1.5px solid var(--border);
+      border-radius: 8px; font-size: 13px; color: var(--text);
+      background: var(--bg); outline: none; font-family: monospace;
+    }
+    .token-row input:focus { border-color: var(--caramel); }
+    .token-status { font-size: 11.5px; margin-top: 8px; }
+    .token-status.ok { color: var(--success); }
+    .token-status.err { color: var(--danger); }
+
+    /* ── Section Card ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+    .card-header {
+      padding: 14px 18px;
+      background: #FDFAF7;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 8px;
+      cursor: pointer; user-select: none;
+    }
+    .card-header h2 { font-size: 13.5px; font-weight: 700; flex: 1; }
+    .card-header .toggle-icon { font-size: 11px; color: var(--muted); transition: transform 0.2s; }
+    .card-header.open .toggle-icon { transform: rotate(180deg); }
+    .card-body { padding: 18px; display: none; }
+    .card-body.open { display: block; }
+
+    /* ── Form Fields ── */
+    .field { margin-bottom: 14px; }
+    .field:last-child { margin-bottom: 0; }
+    .field label {
+      display: block; font-size: 11.5px; font-weight: 600;
+      color: var(--muted); margin-bottom: 5px; letter-spacing: 0.04em;
+    }
+    .field input[type="text"],
+    .field input[type="url"],
+    .field input[type="email"],
+    .field input[type="number"],
+    .field textarea {
+      width: 100%; padding: 10px 12px;
+      border: 1.5px solid var(--border); border-radius: 8px;
+      font-size: 13.5px; color: var(--text);
+      background: var(--bg); outline: none;
+      font-family: inherit; transition: border-color 0.2s;
+    }
+    .field input:focus, .field textarea:focus { border-color: var(--caramel); }
+    .field textarea { resize: vertical; min-height: 60px; line-height: 1.6; }
+    .field-row { display: flex; gap: 10px; }
+    .field-row .field { flex: 1; }
+
+    /* Color picker */
+    .color-field { display: flex; align-items: center; gap: 10px; }
+    .color-field input[type="color"] {
+      width: 44px; height: 38px; border: 1.5px solid var(--border);
+      border-radius: 8px; cursor: pointer; background: none; padding: 2px;
+    }
+    .color-field input[type="text"] { flex: 1; }
+
+    /* Range */
+    .range-field { display: flex; align-items: center; gap: 12px; }
+    .range-field input[type="range"] { flex: 1; accent-color: var(--caramel); }
+    .range-val {
+      min-width: 42px; text-align: right;
+      font-size: 13px; font-weight: 600; color: var(--caramel);
+    }
+
+    /* Toggle */
+    .toggle-wrap { display: flex; align-items: center; gap: 10px; }
+    .toggle {
+      position: relative; width: 42px; height: 24px;
+      display: inline-block;
+    }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider {
+      position: absolute; inset: 0;
+      background: #D0C0B5; border-radius: 99px;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .toggle-slider::before {
+      content: '';
+      position: absolute;
+      width: 18px; height: 18px;
+      left: 3px; top: 3px;
+      background: #fff; border-radius: 50%;
+      transition: transform 0.2s;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+    }
+    .toggle input:checked + .toggle-slider { background: var(--caramel); }
+    .toggle input:checked + .toggle-slider::before { transform: translateX(18px); }
+    .toggle-label { font-size: 13px; color: var(--text); }
+
+    /* ── Link Items ── */
+    .link-item {
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 10px;
+      background: #FDFAF7;
+    }
+    .link-item-header {
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 12px;
+    }
+    .link-item-num {
+      width: 24px; height: 24px;
+      background: var(--caramel); color: #fff;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; flex-shrink: 0;
+    }
+    .link-item-title { flex: 1; font-size: 13px; font-weight: 600; }
+    .btn-remove {
+      background: none; border: none; color: #CCC; cursor: pointer;
+      font-size: 18px; line-height: 1; padding: 2px 6px;
+      border-radius: 6px; transition: color 0.2s, background 0.2s;
+    }
+    .btn-remove:hover { color: var(--danger); background: rgba(192,81,58,0.08); }
+    .badge-select {
+      display: flex; gap: 6px; flex-wrap: wrap;
+    }
+    .badge-opt {
+      padding: 4px 10px; border-radius: 99px; font-size: 11px; font-weight: 700;
+      border: 1.5px solid var(--border); cursor: pointer;
+      background: var(--bg); color: var(--muted); transition: all 0.15s;
+      user-select: none;
+    }
+    .badge-opt.selected { border-color: var(--caramel); background: rgba(184,130,90,0.1); color: var(--caramel-d); }
+    .badge-opt[data-val="HOT"].selected { border-color: #C0513A; background: rgba(192,81,58,0.08); color: #C0513A; }
+    .badge-opt[data-val="FREE"].selected { border-color: #4A8A65; background: rgba(74,138,101,0.1); color: #4A8A65; }
+    .add-btn {
+      width: 100%; padding: 11px; border: 2px dashed var(--border);
+      border-radius: 10px; background: none; color: var(--muted);
+      font-size: 13px; cursor: pointer; font-family: inherit;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .add-btn:hover { border-color: var(--caramel); color: var(--caramel); }
+
+    /* ── Status Banner ── */
+    .status-bar {
+      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+      padding: 12px 24px; border-radius: 99px;
+      font-size: 13px; font-weight: 600;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      z-index: 200; opacity: 0; pointer-events: none;
+      transition: opacity 0.3s, transform 0.3s;
+      transform: translateX(-50%) translateY(10px);
+    }
+    .status-bar.show {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(0);
+    }
+    .status-bar.ok { background: var(--success); color: #fff; }
+    .status-bar.err { background: var(--danger); color: #fff; }
+    .status-bar.loading { background: var(--caramel); color: #fff; }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-title">⚙️ 後台管理</div>
+  <div class="topbar-right">
+    <a href="./index.html" target="_blank" class="btn btn-ghost">預覽</a>
+    <button class="btn btn-primary" id="saveBtn" onclick="saveConfig()">儲存並部署</button>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- GitHub Token -->
+  <div class="token-box">
+    <h3>GitHub 存取金鑰（一次設定）</h3>
+    <p>需要 GitHub Personal Access Token 才能自動部署。<br>
+      前往 GitHub → Settings → Developer settings → Personal access tokens → Fine-grained tokens<br>
+      選擇 <strong>keiitsu/linkinbio</strong>，授予 <strong>Contents: Read and write</strong>。
+    </p>
+    <div class="token-row">
+      <input type="password" id="ghToken" placeholder="github_pat_..." />
+      <button class="btn btn-primary" onclick="saveToken()">儲存</button>
+    </div>
+    <div class="token-status" id="tokenStatus"></div>
+  </div>
+
+  <!-- 個人資料 -->
+  <div class="card">
+    <div class="card-header open" onclick="toggleCard(this)">
+      <h2>👤 個人資料</h2>
+      <span class="toggle-icon">▼</span>
+    </div>
+    <div class="card-body open">
+      <div class="field">
+        <label>頭像圖片 URL</label>
+        <input type="text" id="profile_avatar" placeholder="./avatar_jy.jpg 或外部圖片網址" />
+      </div>
+      <div class="field">
+        <label>顯示名稱</label>
+        <input type="text" id="profile_username" />
+      </div>
+      <div class="field">
+        <label>標語（highlight 文字）</label>
+        <input type="text" id="profile_tagline" />
+      </div>
+      <div class="field">
+        <label>副標語</label>
+        <input type="text" id="profile_bio" />
+      </div>
+    </div>
+  </div>
+
+  <!-- 主題 -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <h2>🎨 主題色彩與字體大小</h2>
+      <span class="toggle-icon">▼</span>
+    </div>
+    <div class="card-body">
+      <div class="field-row">
+        <div class="field">
+          <label>背景色</label>
+          <div class="color-field">
+            <input type="color" id="theme_bg_picker" oninput="syncColor('theme_bg_picker','theme_bg')" />
+            <input type="text" id="theme_bg" oninput="syncColorFromText('theme_bg','theme_bg_picker')" placeholder="#FAF5F0" />
+          </div>
+        </div>
+        <div class="field">
+          <label>主色（焦糖）</label>
+          <div class="color-field">
+            <input type="color" id="theme_caramel_picker" oninput="syncColor('theme_caramel_picker','theme_caramel')" />
+            <input type="text" id="theme_caramel" oninput="syncColorFromText('theme_caramel','theme_caramel_picker')" placeholder="#B8825A" />
+          </div>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>副色（玫瑰）</label>
+          <div class="color-field">
+            <input type="color" id="theme_rose_picker" oninput="syncColor('theme_rose_picker','theme_rose')" />
+            <input type="text" id="theme_rose" oninput="syncColorFromText('theme_rose','theme_rose_picker')" placeholder="#D4A5A5" />
+          </div>
+        </div>
+        <div class="field">
+          <label>文字色</label>
+          <div class="color-field">
+            <input type="color" id="theme_text_picker" oninput="syncColor('theme_text_picker','theme_text')" />
+            <input type="text" id="theme_text" oninput="syncColorFromText('theme_text','theme_text_picker')" placeholder="#3D2B1F" />
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <label>名稱字體大小 <span id="username_size_val" style="color:var(--caramel)"></span></label>
+        <div class="range-field">
+          <input type="range" id="theme_username_size" min="16" max="40" step="1"
+            oninput="document.getElementById('username_size_val').textContent = this.value + 'px'" />
+          <span class="range-val" id="username_size_disp"></span>
+        </div>
+      </div>
+      <div class="field">
+        <label>標語字體大小 <span id="tagline_size_val" style="color:var(--caramel)"></span></label>
+        <div class="range-field">
+          <input type="range" id="theme_tagline_size" min="10" max="20" step="1"
+            oninput="document.getElementById('tagline_size_val').textContent = this.value + 'px'" />
+          <span class="range-val" id="tagline_size_disp"></span>
+        </div>
+      </div>
+      <div class="field">
+        <label>連結標題字體大小 <span id="link_title_size_val" style="color:var(--caramel)"></span></label>
+        <div class="range-field">
+          <input type="range" id="theme_link_title_size" min="11" max="20" step="1"
+            oninput="document.getElementById('link_title_size_val').textContent = this.value + 'px'" />
+          <span class="range-val" id="link_title_size_disp"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 社群連結 -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <h2>🔗 社群連結</h2>
+      <span class="toggle-icon">▼</span>
+    </div>
+    <div class="card-body">
+      <div class="field"><label>Instagram</label><input type="url" id="social_instagram" placeholder="https://instagram.com/..." /></div>
+      <div class="field"><label>TikTok</label><input type="url" id="social_tiktok" placeholder="https://tiktok.com/@..." /></div>
+      <div class="field"><label>YouTube</label><input type="url" id="social_youtube" placeholder="https://youtube.com/@..." /></div>
+      <div class="field"><label>Facebook</label><input type="url" id="social_facebook" placeholder="https://facebook.com/..." /></div>
+      <div class="field"><label>Email</label><input type="email" id="social_email" placeholder="your@email.com" /></div>
+    </div>
+  </div>
+
+  <!-- 連結清單 -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <h2>📋 我的資源連結</h2>
+      <span class="toggle-icon">▼</span>
+    </div>
+    <div class="card-body">
+      <div class="field">
+        <label>區塊標題</label>
+        <input type="text" id="links_label" />
+      </div>
+      <div id="linksList"></div>
+      <button class="add-btn" onclick="addLink()">＋ 新增連結</button>
+    </div>
+  </div>
+
+  <!-- 精選商品 -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <h2>🛒 精選商品卡片</h2>
+      <span class="toggle-icon">▼</span>
+    </div>
+    <div class="card-body">
+      <div class="field">
+        <label>區塊標題</label>
+        <input type="text" id="product_label" />
+      </div>
+      <div class="field">
+        <div class="toggle-wrap">
+          <label class="toggle"><input type="checkbox" id="product_visible" /><span class="toggle-slider"></span></label>
+          <span class="toggle-label">顯示商品卡片</span>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Emoji</label>
+          <input type="text" id="product_emoji" placeholder="✨" />
+        </div>
+        <div class="field">
+          <label>分類標籤</label>
+          <input type="text" id="product_tag" placeholder="數位商品" />
+        </div>
+      </div>
+      <div class="field">
+        <label>商品名稱</label>
+        <input type="text" id="product_title" />
+      </div>
+      <div class="field">
+        <label>商品描述</label>
+        <textarea id="product_desc"></textarea>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>按鈕文字</label>
+          <input type="text" id="product_cta" placeholder="立即取得" />
+        </div>
+        <div class="field">
+          <label>連結 URL</label>
+          <input type="url" id="product_url" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 訂閱區塊 -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <h2>📧 訂閱區塊</h2>
+      <span class="toggle-icon">▼</span>
+    </div>
+    <div class="card-body">
+      <div class="field">
+        <div class="toggle-wrap">
+          <label class="toggle"><input type="checkbox" id="subscribe_visible" /><span class="toggle-slider"></span></label>
+          <span class="toggle-label">顯示訂閱區塊</span>
+        </div>
+      </div>
+      <div class="field">
+        <label>區塊標題</label>
+        <input type="text" id="subscribe_label" />
+      </div>
+      <div class="field">
+        <label>主標題</label>
+        <input type="text" id="subscribe_title" />
+      </div>
+      <div class="field">
+        <label>副說明</label>
+        <textarea id="subscribe_subtitle"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- 頁尾 -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <h2>🔻 頁尾文字</h2>
+      <span class="toggle-icon">▼</span>
+    </div>
+    <div class="card-body">
+      <div class="field">
+        <input type="text" id="footer_text" />
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="status-bar" id="statusBar"></div>
+
+<script>
+const REPO = 'keiitsu/linkinbio';
+const FILE = 'config.json';
+
+// ── Token ──
+function saveToken() {
+  const t = document.getElementById('ghToken').value.trim();
+  if (!t) return;
+  localStorage.setItem('gh_token', t);
+  document.getElementById('tokenStatus').textContent = '已儲存（僅存於本機瀏覽器）';
+  document.getElementById('tokenStatus').className = 'token-status ok';
+}
+function loadToken() {
+  const t = localStorage.getItem('gh_token');
+  if (t) {
+    document.getElementById('ghToken').value = t;
+    document.getElementById('tokenStatus').textContent = '金鑰已載入';
+    document.getElementById('tokenStatus').className = 'token-status ok';
+  }
+}
+
+// ── Card Toggle ──
+function toggleCard(header) {
+  header.classList.toggle('open');
+  header.nextElementSibling.classList.toggle('open');
+}
+
+// ── Color Sync ──
+function syncColor(pickerId, textId) {
+  document.getElementById(textId).value = document.getElementById(pickerId).value;
+}
+function syncColorFromText(textId, pickerId) {
+  const val = document.getElementById(textId).value;
+  if (/^#[0-9A-Fa-f]{6}$/.test(val)) {
+    document.getElementById(pickerId).value = val;
+  }
+}
+function setColor(pickerId, textId, value) {
+  document.getElementById(textId).value = value;
+  if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
+    document.getElementById(pickerId).value = value;
+  }
+}
+
+// ── Range Display ──
+function setRange(id, dispId, value) {
+  const el = document.getElementById(id);
+  el.value = value;
+  document.getElementById(dispId).textContent = value + 'px';
+  // also update the label span
+  const labelSpanId = id.replace('theme_','').replace('_size','') + '_size_val';
+  const sp = document.getElementById(labelSpanId);
+  if (sp) sp.textContent = value + 'px';
+}
+
+// ── Links ──
+let linksData = [];
+function renderLinks() {
+  const container = document.getElementById('linksList');
+  container.innerHTML = linksData.map((l, i) => `
+    <div class="link-item" id="link_item_${i}">
+      <div class="link-item-header">
+        <div class="link-item-num">${i+1}</div>
+        <div class="link-item-title">${l.title || '（新連結）'}</div>
+        <button class="btn-remove" onclick="removeLink(${i})" title="刪除">×</button>
+      </div>
+      <div class="field-row">
+        <div class="field" style="flex:0 0 60px">
+          <label>Emoji</label>
+          <input type="text" value="${l.emoji||''}" onchange="linksData[${i}].emoji=this.value" />
+        </div>
+        <div class="field">
+          <label>標題</label>
+          <input type="text" value="${escHtml(l.title||'')}"
+            onchange="linksData[${i}].title=this.value; document.querySelector('#link_item_${i} .link-item-title').textContent=this.value||'（新連結）'" />
+        </div>
+      </div>
+      <div class="field">
+        <label>副標題</label>
+        <input type="text" value="${escHtml(l.subtitle||'')}" onchange="linksData[${i}].subtitle=this.value" />
+      </div>
+      <div class="field">
+        <label>連結 URL</label>
+        <input type="url" value="${escHtml(l.url||'')}" onchange="linksData[${i}].url=this.value" />
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Badge 標籤</label>
+          <div class="badge-select">
+            ${['', 'HOT', 'FREE', 'JOIN'].map(b => `
+              <span class="badge-opt ${l.badge===b?'selected':''}" data-val="${b}"
+                onclick="setBadge(${i},'${b}',this)">${b||'無'}</span>
+            `).join('')}
+          </div>
+        </div>
+        <div class="field" style="flex:0 0 120px">
+          <label>Featured 高亮</label>
+          <div class="toggle-wrap" style="margin-top:4px">
+            <label class="toggle">
+              <input type="checkbox" ${l.featured?'checked':''} onchange="linksData[${i}].featured=this.checked" />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="field" style="margin-top:6px">
+        <div class="toggle-wrap">
+          <label class="toggle">
+            <input type="checkbox" ${l.visible!==false?'checked':''} onchange="linksData[${i}].visible=this.checked" />
+            <span class="toggle-slider"></span>
+          </label>
+          <span class="toggle-label">顯示此連結</span>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+function setBadge(idx, val, el) {
+  linksData[idx].badge = val;
+  el.closest('.badge-select').querySelectorAll('.badge-opt').forEach(e => e.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function addLink() {
+  linksData.push({ emoji:'🔗', title:'新連結', subtitle:'', url:'', badge:'', featured:false, visible:true });
+  renderLinks();
+}
+function removeLink(i) {
+  if (!confirm('確定刪除這個連結？')) return;
+  linksData.splice(i, 1);
+  renderLinks();
+}
+
+// ── Load Config ──
+async function loadConfig() {
+  try {
+    const res = await fetch('./config.json?v=' + Date.now());
+    const cfg = await res.json();
+    populate(cfg);
+    showStatus('設定載入成功', 'ok');
+  } catch(e) {
+    showStatus('載入設定失敗：' + e.message, 'err');
+  }
+}
+
+function populate(cfg) {
+  const p = cfg.profile || {};
+  setVal('profile_avatar', p.avatar);
+  setVal('profile_username', p.username);
+  setVal('profile_tagline', p.tagline);
+  setVal('profile_bio', p.bio);
+
+  const t = cfg.theme || {};
+  setColor('theme_bg_picker','theme_bg', t.bg||'#FAF5F0');
+  setColor('theme_caramel_picker','theme_caramel', t.caramel||'#B8825A');
+  setColor('theme_rose_picker','theme_rose', t.rose||'#D4A5A5');
+  setColor('theme_text_picker','theme_text', t.text||'#3D2B1F');
+  setRange('theme_username_size','username_size_disp', t.username_size||26);
+  setRange('theme_tagline_size','tagline_size_disp', t.tagline_size||13);
+  setRange('theme_link_title_size','link_title_size_disp', t.link_title_size||14);
+
+  const sMap = {};
+  (cfg.socials||[]).forEach(s => sMap[s.platform] = s.url);
+  setVal('social_instagram', sMap.instagram||'');
+  setVal('social_tiktok', sMap.tiktok||'');
+  setVal('social_youtube', sMap.youtube||'');
+  setVal('social_facebook', sMap.facebook||'');
+  setVal('social_email', sMap.email||'');
+
+  setVal('links_label', cfg.links_label||'我的資源');
+  linksData = JSON.parse(JSON.stringify(cfg.links||[]));
+  renderLinks();
+
+  setVal('product_label', cfg.product_label||'精選商品');
+  const pr = cfg.product || {};
+  document.getElementById('product_visible').checked = pr.visible !== false;
+  setVal('product_emoji', pr.emoji);
+  setVal('product_tag', pr.tag);
+  setVal('product_title', pr.title);
+  setVal('product_desc', pr.desc);
+  setVal('product_cta', pr.cta);
+  setVal('product_url', pr.url);
+
+  const sub = cfg.subscribe || {};
+  document.getElementById('subscribe_visible').checked = sub.visible !== false;
+  setVal('subscribe_label', sub.label||'加入訂閱');
+  setVal('subscribe_title', sub.title);
+  setVal('subscribe_subtitle', sub.subtitle);
+
+  setVal('footer_text', cfg.footer||'');
+}
+
+// ── Collect Config ──
+function collectConfig() {
+  return {
+    profile: {
+      avatar: getVal('profile_avatar'),
+      username: getVal('profile_username'),
+      tagline: getVal('profile_tagline'),
+      bio: getVal('profile_bio')
+    },
+    theme: {
+      bg: getVal('theme_bg'),
+      caramel: getVal('theme_caramel'),
+      rose: getVal('theme_rose'),
+      text: getVal('theme_text'),
+      username_size: document.getElementById('theme_username_size').value,
+      tagline_size: document.getElementById('theme_tagline_size').value,
+      link_title_size: document.getElementById('theme_link_title_size').value
+    },
+    socials: [
+      { platform:'instagram', url: getVal('social_instagram') },
+      { platform:'tiktok',    url: getVal('social_tiktok') },
+      { platform:'youtube',   url: getVal('social_youtube') },
+      { platform:'facebook',  url: getVal('social_facebook') },
+      { platform:'email',     url: getVal('social_email') }
+    ],
+    links_label: getVal('links_label'),
+    links: linksData,
+    product_label: getVal('product_label'),
+    product: {
+      visible: document.getElementById('product_visible').checked,
+      emoji: getVal('product_emoji'),
+      tag: getVal('product_tag'),
+      title: getVal('product_title'),
+      desc: getVal('product_desc'),
+      cta: getVal('product_cta'),
+      url: getVal('product_url')
+    },
+    subscribe: {
+      visible: document.getElementById('subscribe_visible').checked,
+      label: getVal('subscribe_label'),
+      title: getVal('subscribe_title'),
+      subtitle: getVal('subscribe_subtitle')
+    },
+    footer: getVal('footer_text')
+  };
+}
+
+// ── Save to GitHub ──
+async function saveConfig() {
+  const token = localStorage.getItem('gh_token');
+  if (!token) {
+    showStatus('請先設定 GitHub 金鑰', 'err');
+    return;
+  }
+
+  const btn = document.getElementById('saveBtn');
+  btn.disabled = true;
+  btn.textContent = '儲存中...';
+  showStatus('正在儲存並部署...', 'loading');
+
+  try {
+    // 1. Get current SHA
+    const metaRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE}`, {
+      headers: { Authorization: 'Bearer ' + token }
+    });
+    if (!metaRes.ok) throw new Error('無法取得檔案資訊（金鑰可能無效）');
+    const meta = await metaRes.json();
+
+    // 2. Encode new content
+    const cfg = collectConfig();
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(cfg, null, 2))));
+
+    // 3. Commit
+    const putRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE}`, {
+      method: 'PUT',
+      headers: {
+        Authorization: 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        message: 'update config via admin',
+        content: content,
+        sha: meta.sha
+      })
+    });
+    if (!putRes.ok) {
+      const err = await putRes.json();
+      throw new Error(err.message || '儲存失敗');
+    }
+
+    showStatus('✓ 已儲存！Vercel 正在自動部署（約 10-30 秒）', 'ok');
+  } catch(e) {
+    showStatus('錯誤：' + e.message, 'err');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '儲存並部署';
+  }
+}
+
+// ── Helpers ──
+function setVal(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.value = val || '';
+}
+function getVal(id) {
+  const el = document.getElementById(id);
+  return el ? el.value.trim() : '';
+}
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function showStatus(msg, type) {
+  const bar = document.getElementById('statusBar');
+  bar.textContent = msg;
+  bar.className = 'status-bar ' + type + ' show';
+  if (type !== 'loading') {
+    setTimeout(() => bar.classList.remove('show'), 4000);
+  }
+}
+
+// ── Init ──
+loadToken();
+loadConfig();
+</script>
+</body>
+</html>
