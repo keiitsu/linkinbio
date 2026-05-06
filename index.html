@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>54jingyi｜璟爺高級福利社</title>
+  <meta name="description" content="AI教學・女性成長・數位副業・內容變現｜璟爺的所有資源在這裡" />
+  <meta property="og:title" content="54jingyi｜璟爺高級福利社" />
+  <meta property="og:description" content="AI教學・女性成長・數位副業・內容變現" />
+  <meta property="og:image" content="./avatar.jpg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #FAF5F0;
+      --bg2:          #F2E8DF;
+      --surface:      rgba(255,255,255,0.72);
+      --surface-hover:rgba(255,255,255,0.9);
+      --border:       rgba(180,130,90,0.18);
+      --border-hover: rgba(180,130,90,0.45);
+      --caramel:      #B8825A;
+      --caramel-d:    #9A6B44;
+      --rose:         #D4A5A5;
+      --rose-d:       #C48A8A;
+      --text:         #3D2B1F;
+      --text-muted:   rgba(61,43,31,0.5);
+      --cream:        #FAF5F0;
+      --radius-card:  18px;
+      --shadow:       0 2px 20px rgba(120,80,50,0.08);
+      --shadow-hover: 0 6px 36px rgba(120,80,50,0.14);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: "Noto Sans TC", -apple-system, "PingFang TC", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding-bottom: 80px;
+      /* warm gradient bg */
+      background-image:
+        radial-gradient(ellipse 70% 50% at 50% 0%, rgba(212,165,165,0.18) 0%, transparent 65%),
+        radial-gradient(ellipse 50% 40% at 100% 80%, rgba(184,130,90,0.08) 0%, transparent 60%);
+    }
+
+    .page {
+      width: 100%;
+      max-width: 480px;
+      padding: 0 20px;
+    }
+
+    /* ── Decorative dots ── */
+    .deco {
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .deco-1 {
+      width: 200px; height: 200px;
+      top: -60px; right: -60px;
+      background: radial-gradient(circle, rgba(212,165,165,0.15) 0%, transparent 70%);
+    }
+    .deco-2 {
+      width: 150px; height: 150px;
+      bottom: 100px; left: -50px;
+      background: radial-gradient(circle, rgba(184,130,90,0.1) 0%, transparent 70%);
+    }
+
+    /* ══ HEADER ══ */
+    .header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 52px 0 28px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .avatar-wrap {
+      position: relative;
+      width: 100px;
+      height: 100px;
+      margin-bottom: 16px;
+    }
+    .avatar-ring {
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--rose), var(--caramel), #E8C4A0, var(--rose));
+      animation: ringRotate 6s linear infinite;
+    }
+    @keyframes ringRotate {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+    .avatar-wrap img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      position: relative;
+      z-index: 1;
+      border: 4px solid var(--bg);
+    }
+
+    .username {
+      font-family: "Noto Serif TC", serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+      letter-spacing: 0.02em;
+    }
+
+    .tagline {
+      font-size: 13px;
+      color: var(--text-muted);
+      text-align: center;
+      line-height: 1.9;
+      margin-bottom: 20px;
+      letter-spacing: 0.03em;
+    }
+    .tagline .highlight {
+      color: var(--caramel);
+      font-weight: 500;
+    }
+
+    /* ── Socials ── */
+    .socials { display: flex; gap: 10px; }
+    .socials a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: all 0.22s ease;
+      backdrop-filter: blur(8px);
+      box-shadow: var(--shadow);
+    }
+    .socials a:hover {
+      background: var(--surface-hover);
+      border-color: var(--caramel);
+      color: var(--caramel);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hover);
+    }
+    .socials svg { width: 15px; height: 15px; fill: currentColor; }
+
+    /* ══ Section Label ══ */
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 24px 0 11px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--caramel);
+      position: relative;
+      z-index: 1;
+    }
+    .section-label::before,
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--border), transparent);
+    }
+
+    /* ══ Link Cards ══ */
+    .links {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .link-card {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      padding: 13px 15px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      text-decoration: none;
+      color: var(--text);
+      transition: all 0.22s ease;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+    }
+    .link-card:hover {
+      background: var(--surface-hover);
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hover);
+    }
+    .link-card:active { transform: translateY(0); }
+
+    .link-card.featured {
+      border-color: rgba(184,130,90,0.35);
+      background: rgba(255,255,255,0.85);
+    }
+    .link-card.featured:hover { border-color: var(--caramel); }
+
+    .link-emoji {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 21px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+    }
+
+    .link-text { flex: 1; min-width: 0; }
+    .link-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: var(--text);
+    }
+    .link-sub {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .link-arrow {
+      color: var(--text-muted);
+      flex-shrink: 0;
+      transition: transform 0.2s, color 0.2s;
+    }
+    .link-card:hover .link-arrow {
+      transform: translateX(3px);
+      color: var(--caramel);
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-block;
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      padding: 2px 6px;
+      border-radius: 99px;
+      margin-left: 5px;
+      vertical-align: middle;
+    }
+    .badge-hot  {
+      background: rgba(212,100,80,0.1);
+      color: #C0513A;
+      border: 1px solid rgba(212,100,80,0.25);
+    }
+    .badge-free {
+      background: rgba(100,160,120,0.12);
+      color: #4A8A65;
+      border: 1px solid rgba(100,160,120,0.25);
+    }
+    .badge-join {
+      background: rgba(184,130,90,0.12);
+      color: var(--caramel-d);
+      border: 1px solid rgba(184,130,90,0.3);
+    }
+
+    /* ══ Product Card ══ */
+    .product-card {
+      display: block;
+      text-decoration: none;
+      color: var(--text);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+      transition: all 0.22s ease;
+      position: relative;
+      z-index: 1;
+    }
+    .product-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hover);
+    }
+    .product-banner {
+      width: 100%;
+      height: 156px;
+      background: linear-gradient(135deg, #EDD5C0 0%, #F0C4C4 50%, #E8D0B8 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 52px;
+      position: relative;
+    }
+    .product-banner::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 50%;
+      background: linear-gradient(to bottom, transparent, rgba(250,245,240,0.3));
+    }
+    .product-body { padding: 16px; }
+    .product-tag {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--caramel);
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+    .product-title {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+    .product-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.7;
+      margin-bottom: 14px;
+    }
+    .product-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, var(--caramel), #CFA070);
+      color: #fff;
+      font-size: 12.5px;
+      font-weight: 700;
+      padding: 8px 18px;
+      border-radius: 99px;
+      letter-spacing: 0.03em;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .product-card:hover .product-cta { opacity: 0.9; transform: scale(1.03); }
+
+    /* ══ Subscribe ══ */
+    .subscribe-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      padding: 22px 20px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+      position: relative;
+      z-index: 1;
+    }
+    .subscribe-title {
+      font-family: "Noto Serif TC", serif;
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 5px;
+      color: var(--text);
+    }
+    .subscribe-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+    .subscribe-form { display: flex; flex-direction: column; gap: 9px; }
+    .subscribe-form input {
+      width: 100%;
+      padding: 11px 14px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 13.5px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      font-family: inherit;
+    }
+    .subscribe-form input::placeholder { color: var(--text-muted); }
+    .subscribe-form input:focus {
+      border-color: var(--caramel);
+      box-shadow: 0 0 0 3px rgba(184,130,90,0.1);
+    }
+    .subscribe-btn {
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--rose-d), var(--rose));
+      color: #fff;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.2s;
+      font-family: inherit;
+      letter-spacing: 0.04em;
+    }
+    .subscribe-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+    .subscribe-success {
+      display: none;
+      text-align: center;
+      color: var(--caramel-d);
+      font-size: 13.5px;
+      padding: 8px 0;
+      line-height: 1.8;
+    }
+
+    /* ══ Footer ══ */
+    .footer {
+      margin-top: 36px;
+      text-align: center;
+      font-size: 10.5px;
+      color: rgba(61,43,31,0.28);
+      letter-spacing: 0.06em;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ══ Animations ══ */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .header        { animation: fadeUp 0.55s cubic-bezier(.22,.68,0,1.2) both 0s; }
+    .section-label { animation: fadeUp 0.5s ease both 0.1s; opacity: 0; }
+    .links         { animation: fadeUp 0.5s ease both 0.15s; opacity: 0; }
+    .product-card  { animation: fadeUp 0.5s ease both 0.22s; opacity: 0; }
+    .subscribe-box { animation: fadeUp 0.5s ease both 0.28s; opacity: 0; }
+    .footer        { animation: fadeUp 0.5s ease both 0.33s; opacity: 0; }
+
+    @media (max-width: 400px) {
+      .username { font-size: 22px; }
+      .page { padding: 0 14px; }
+    }
+  </style>
+</head>
+<body>
+<div class="deco deco-1"></div>
+<div class="deco deco-2"></div>
+
+<div class="page">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="avatar-wrap">
+      <div class="avatar-ring"></div>
+      <img src="./avatar_jy.jpg" alt="璟爺"
+           onerror="this.onerror=null; this.src='./avatar.jpg'" />
+    </div>
+    <div class="username">54jingyi</div>
+    <div class="tagline">
+      <span class="highlight">AI 教學 · 女性成長 · 數位副業</span><br />
+      讓每個女生都能靠內容變現，活出高級感
+    </div>
+    <div class="socials">
+      <a href="https://instagram.com/54jingyi" target="_blank" rel="noopener" aria-label="Instagram">
+        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+      </a>
+      <a href="https://tiktok.com/@54jingyi" target="_blank" rel="noopener" aria-label="TikTok">
+        <svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.32 6.32 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.76a4.85 4.85 0 0 1-1.01-.07z"/></svg>
+      </a>
+      <a href="https://youtube.com/@g9206312002" target="_blank" rel="noopener" aria-label="YouTube">
+        <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+      </a>
+      <a href="https://www.facebook.com/profile.php?id=100091505631426" target="_blank" rel="noopener" aria-label="Facebook">
+        <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+      </a>
+      <a href="mailto:54jingyi@gmail.com" aria-label="Email" id="email">
+        <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+      </a>
+    </div>
+  </header>
+
+  <!-- LINKS -->
+  <div class="section-label">我的資源</div>
+  <div class="links">
+
+    <a class="link-card featured"
+       href="https://myship.7-11.com.tw/general/detail/GM2605028601902"
+       target="_blank" rel="noopener">
+      <div class="link-emoji">🛍️</div>
+      <div class="link-text">
+        <div class="link-title">璟爺高級福利社 <span class="badge badge-hot">HOT</span></div>
+        <div class="link-sub">嚴選好物 · 璟爺選品 · 限量出貨</div>
+      </div>
+      <svg class="link-arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+    </a>
+
+    <a class="link-card featured"
+       href="https://www.skool.com/1000-9284/about?ref=0b3efe9894f94379bbe9967b7c64051b"
+       target="_blank" rel="noopener">
+      <div class="link-emoji">👑</div>
+      <div class="link-text">
+        <div class="link-title">大女主顯化致富俱樂部 <span class="badge badge-join">JOIN</span></div>
+        <div class="link-sub">手機致富 · 0成本獲客 · 100%授權利潤</div>
+      </div>
+      <svg class="link-arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+    </a>
+
+    <a class="link-card"
+       href="https://www.notion.so/AI-351c95129e98805e90aecb1ab953f140?source=copy_link"
+       target="_blank" rel="noopener">
+      <div class="link-emoji">📅</div>
+      <div class="link-text">
+        <div class="link-title">AI 週計畫模板 <span class="badge badge-free">免費</span></div>
+        <div class="link-sub">7天規劃 AI 副業計畫，複製即用</div>
+      </div>
+      <svg class="link-arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+    </a>
+
+    <a class="link-card"
+       href="https://www.notion.so/IG-350c95129e9880cfa7c2e5ef71490ace?source=copy_link"
+       target="_blank" rel="noopener">
+      <div class="link-emoji">✍️</div>
+      <div class="link-text">
+        <div class="link-title">IG 輪播貼文提示詞模板 <span class="badge badge-free">免費</span></div>
+        <div class="link-sub">複製貼上就能出貼文，省下 3 小時</div>
+      </div>
+      <svg class="link-arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+    </a>
+
+  </div>
+
+  <!-- SHOP -->
+  <div class="section-label">精選商品</div>
+  <a class="product-card"
+     href="https://shop.beacons.ai/54jingyi/a0cba165-558c-46a7-9500-94a3c2000f3a"
+     target="_blank" rel="noopener">
+    <div class="product-banner">✨</div>
+    <div class="product-body">
+      <div class="product-tag">數位商品</div>
+      <div class="product-title">Social Content AI Accelerator Pack</div>
+      <div class="product-desc">AI 加速包 · 從零到一打造你的 IG 內容矩陣，附完整提示詞與實戰範本</div>
+      <div class="product-cta">
+        立即取得
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+    </div>
+  </a>
+
+  <!-- SUBSCRIBE -->
+  <div class="section-label">加入訂閱</div>
+  <div class="subscribe-box">
+    <div class="subscribe-title">訂閱璟爺獨家更新</div>
+    <div class="subscribe-sub">獲得 AI 工具教學、限定資源與變現技巧，直送你的信箱。</div>
+    <form class="subscribe-form" id="subscribeForm" onsubmit="handleSubscribe(event)">
+      <input type="text"  id="subName"  placeholder="你的名字" required />
+      <input type="email" id="subEmail" placeholder="Email 地址" required />
+      <button type="submit" class="subscribe-btn">立即訂閱</button>
+    </form>
+    <div class="subscribe-success" id="subscribeSuccess">
+      已訂閱成功！歡迎加入璟爺的福利大家庭 🎉
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>© 2025 54jingyi · All rights reserved</p>
+  </footer>
+
+</div>
+
+<script>
+  function handleSubscribe(e) {
+    e.preventDefault();
+    // TODO: POST name/email to Mailchimp / ConvertKit / EmailOctopus API
+    document.getElementById('subscribeForm').style.display = 'none';
+    document.getElementById('subscribeSuccess').style.display = 'block';
+  }
+</script>
+</body>
+</html>
